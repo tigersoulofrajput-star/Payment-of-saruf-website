@@ -1,1 +1,3905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <title>Saruf Photography</title>
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #fffaf5;
+      color: #2b1a12;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    /* ================= HEADER ================= */
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(255,250,245,0.96);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid #eadbd0;
+    }
+
+    .navbar {
+      max-width: 1200px;
+      margin: auto;
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: #2b1a12;
+      font-weight: bold;
+      font-size: 20px;
+    }
+
+    .brand img {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #c58b55;
+    }
+
+    nav {
+      display: flex;
+      gap: 22px;
+      align-items: center;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #3d2a20;
+      font-weight: 600;
+    }
+
+    nav a:hover {
+      color: #b56d32;
+    }
+
+    .admin-btn {
+      background: #2b1a12;
+      color: white;
+      padding: 10px 16px;
+      border-radius: 10px;
+      text-decoration: none;
+    }
+
+    /* ================= HERO ================= */
+
+    .hero {
+      min-height: 620px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 70px 20px;
+      background:
+        linear-gradient(rgba(43,26,18,.60), rgba(43,26,18,.65)),
+        url("https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1800&q=85")
+        center/cover;
+      color: white;
+    }
+
+    .hero-content {
+      max-width: 850px;
+    }
+
+    .hero-logo {
+      width: 105px;
+      height: 105px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid white;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      font-size: clamp(42px, 7vw, 76px);
+      margin-bottom: 15px;
+    }
+
+    .hero p {
+      font-size: 20px;
+      line-height: 1.7;
+      max-width: 700px;
+      margin: auto;
+    }
+
+    .hero-buttons {
+      margin-top: 30px;
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .primary-btn,
+    .secondary-btn {
+      padding: 14px 24px;
+      border-radius: 12px;
+      border: none;
+      text-decoration: none;
+      font-weight: bold;
+      display: inline-block;
+    }
+
+    .primary-btn {
+      background: #c47b3d;
+      color: white;
+    }
+
+    .secondary-btn {
+      background: white;
+      color: #2b1a12;
+    }
+
+    /* ================= GENERAL ================= */
+
+    section {
+      padding: 75px 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 45px;
+    }
+
+    .section-title h2 {
+      font-size: 38px;
+      margin-bottom: 10px;
+    }
+
+    .section-title p {
+      color: #76665c;
+      font-size: 17px;
+    }
+
+    /* ================= PACKAGES ================= */
+
+    .packages-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 25px;
+    }
+
+    .package-card {
+      background: white;
+      border: 1px solid #eadbd0;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 10px 35px rgba(70,40,20,.08);
+      transition: .25s;
+      cursor: pointer;
+    }
+
+    .package-card:hover {
+      transform: translateY(-7px);
+      box-shadow: 0 18px 45px rgba(70,40,20,.15);
+    }
+
+    .package-photo {
+      width: 100%;
+      height: 230px;
+      object-fit: cover;
+      background: #eee;
+    }
+
+    .package-content {
+      padding: 25px;
+    }
+
+    .package-content h3 {
+      font-size: 25px;
+      margin-bottom: 10px;
+    }
+
+    .price {
+      font-size: 30px;
+      font-weight: bold;
+      color: #b76b2e;
+      margin: 10px 0;
+    }
+
+    .package-info {
+      color: #6d5a50;
+      margin-bottom: 14px;
+    }
+
+    .features {
+      list-style: none;
+      margin: 15px 0;
+    }
+
+    .features li {
+      padding: 6px 0;
+      color: #4e4038;
+    }
+
+    .features li::before {
+      content: "✓ ";
+      color: #b76b2e;
+      font-weight: bold;
+    }
+
+    .book-btn {
+      width: 100%;
+      border: none;
+      background: #2b1a12;
+      color: white;
+      padding: 13px;
+      border-radius: 10px;
+      font-weight: bold;
+    }
+
+    /* ================= EXPERIENCE ================= */
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+    }
+
+    .gallery-item {
+      height: 270px;
+      border-radius: 15px;
+      overflow: hidden;
+      position: relative;
+      background: #eee;
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: .3s;
+    }
+
+    .gallery-item:hover img {
+      transform: scale(1.07);
+    }
+
+    /* ================= ABOUT ================= */
+
+    .about-box {
+      background: #f3e7dc;
+      border-radius: 25px;
+      padding: 45px;
+      text-align: center;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    .about-box p {
+      line-height: 1.8;
+      color: #59483e;
+      font-size: 17px;
+    }
+
+    /* ================= BOOKING ================= */
+
+    .booking-section {
+      background: #2b1a12;
+      color: white;
+    }
+
+    .booking-box {
+      max-width: 700px;
+      margin: auto;
+      background: white;
+      color: #2b1a12;
+      padding: 35px;
+      border-radius: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 7px;
+      font-weight: bold;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #d9c8bb;
+      border-radius: 10px;
+      outline: none;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: #b76b2e;
+    }
+
+    .submit-btn {
+      width: 100%;
+      border: none;
+      padding: 15px;
+      background: #b76b2e;
+      color: white;
+      border-radius: 11px;
+      font-weight: bold;
+      font-size: 17px;
+    }
+
+    /* ================= FOOTER ================= */
+
+    footer {
+      background: #180e09;
+      color: white;
+      padding: 35px 20px;
+      text-align: center;
+    }
+
+    /* ================= MODAL ================= */
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.65);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-box {
+      background: white;
+      color: #2b1a12;
+      width: 100%;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow-y: auto;
+      border-radius: 20px;
+      padding: 30px;
+      position: relative;
+    }
+
+    .close-btn {
+      position: absolute;
+      right: 18px;
+      top: 15px;
+      border: none;
+      background: transparent;
+      font-size: 28px;
+    }
+
+    .detail-photo {
+      width: 100%;
+      height: 260px;
+      object-fit: cover;
+      border-radius: 15px;
+      margin-bottom: 20px;
+    }
+
+    /* ================= ADMIN ================= */
+
+    #adminPage {
+      display: none;
+      min-height: 100vh;
+      background: #f7f1ec;
+    }
+
+    .admin-header {
+      background: #24140d;
+      color: white;
+      padding: 18px 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .admin-header button {
+      border: none;
+      padding: 10px 15px;
+      border-radius: 8px;
+      background: #c47b3d;
+      color: white;
+    }
+
+    .admin-container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 30px 20px;
+    }
+
+    .admin-grid {
+      display: grid;
+      grid-template-columns: repeat(2,1fr);
+      gap: 25px;
+    }
+
+    .admin-card {
+      background: white;
+      border-radius: 17px;
+      padding: 25px;
+      box-shadow: 0 5px 25px rgba(0,0,0,.06);
+    }
+
+    .admin-card h3 {
+      margin-bottom: 20px;
+    }
+
+    .admin-card input,
+    .admin-card textarea,
+    .admin-card select {
+      width: 100%;
+      padding: 11px;
+      margin-bottom: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+
+    .admin-card button {
+      border: none;
+      background: #2b1a12;
+      color: white;
+      padding: 11px 15px;
+      border-radius: 8px;
+      margin: 4px;
+    }
+
+    .danger {
+      background: #b3261e !important;
+    }
+
+    .success {
+      background: #247a42 !important;
+    }
+
+    .admin-table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 700px;
+    }
+
+    th,
+    td {
+      padding: 12px;
+      border-bottom: 1px solid #eee;
+      text-align: left;
+    }
+
+    th {
+      background: #f3e8df;
+    }
+
+    .login-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .login-box {
+      width: 100%;
+      max-width: 430px;
+      background: white;
+      padding: 35px;
+      border-radius: 20px;
+      box-shadow: 0 15px 50px rgba(0,0,0,.12);
+    }
+
+    .login-box h2 {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .login-box input {
+      width: 100%;
+      padding: 13px;
+      margin-bottom: 13px;
+      border: 1px solid #ddd;
+      border-radius: 9px;
+    }
+
+    .login-box button {
+      width: 100%;
+      padding: 13px;
+      border: none;
+      background: #2b1a12;
+      color: white;
+      border-radius: 9px;
+    }
+
+    .admin-package-item,
+    .admin-photo-item,
+    .admin-date-item {
+      border: 1px solid #eee;
+      padding: 15px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+    }
+
+    .admin-package-item img,
+    .admin-photo-item img {
+      width: 100px;
+      height: 75px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 20px;
+      background: #eee;
+      font-size: 12px;
+    }
+
+    /* ================= RESPONSIVE ================= */
+
+    @media(max-width:900px) {
+      .packages-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .gallery {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .admin-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media(max-width:650px) {
+      nav {
+        display: none;
+      }
+
+      .packages-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .gallery {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .gallery-item {
+        height: 210px;
+      }
+
+      section {
+        padding: 55px 15px;
+      }
+
+      .booking-box,
+      .about-box {
+        padding: 25px;
+      }
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 35px;
+      color: #777;
+    }
+
+    .message {
+      padding: 12px;
+      border-radius: 9px;
+      margin-bottom: 15px;
+      display: none;
+    }
+
+    .message.show {
+      display: block;
+    }
+
+    .message.error {
+      background: #ffe1df;
+      color: #9b211a;
+    }
+
+    .message.success {
+      background: #ddf6e5;
+      color: #17652f;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- =========================================================
+     PUBLIC WEBSITE
+========================================================= -->
+
+<div id="publicPage">
+
+  <header>
+    <div class="navbar">
+
+      <a href="#" class="brand">
+        <img
+          id="navLogo"
+          src="https://lsbkfbfhlunmyizpvazl.supabase.co/storage/v1/object/public/Payment%20facility%20website%20of%20saruf/file_000000004e448211b4d174df83b53cfb.png"
+          alt="Logo"
+        >
+        <span id="navName">Saruf Photography</span>
+      </a>
+
+      <nav>
+        <a href="#packages">Packages</a>
+        <a href="#experience">Experience</a>
+        <a href="#about">About</a>
+        <a href="#booking">Book</a>
+        <a href="?admin=1" class="admin-btn">Admin</a>
+      </nav>
+
+    </div>
+  </header>
+
+
+  <!-- HERO -->
+
+  <section class="hero">
+
+    <div class="hero-content">
+
+      <img
+        id="heroLogo"
+        class="hero-logo"
+        src="https://lsbkfbfhlunmyizpvazl.supabase.co/storage/v1/object/public/Payment%20facility%20website%20of%20saruf/file_000000004e448211b4d174df83b53cfb.png"
+        alt="Saruf Photography"
+      >
+
+      <h1 id="heroTitle">Saruf Photography</h1>
+
+      <p>
+        We capture your most beautiful wedding moments,
+        emotions and memories that you can keep forever.
+      </p>
+
+      <div class="hero-buttons">
+        <a href="#packages" class="primary-btn">View Packages</a>
+        <a href="#booking" class="secondary-btn">Book Your Date</a>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- PACKAGES -->
+
+  <section id="packages">
+
+    <div class="container">
+
+      <div class="section-title">
+        <h2>Wedding Packages</h2>
+        <p>Choose the photography package that fits your celebration.</p>
+      </div>
+
+      <div id="packagesGrid" class="packages-grid">
+        <div class="empty">Loading packages...</div>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- EXPERIENCE -->
+
+  <section id="experience">
+
+    <div class="container">
+
+      <div class="section-title">
+        <h2>Our Experience</h2>
+        <p>Some beautiful moments captured by our team.</p>
+      </div>
+
+      <div id="experienceGallery" class="gallery">
+        <div class="empty">Loading photos...</div>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ABOUT -->
+
+  <section id="about">
+
+    <div class="container">
+
+      <div class="section-title">
+        <h2>About Us</h2>
+      </div>
+
+      <div class="about-box">
+
+        <p id="aboutText">
+          Saruf Photography is dedicated to capturing beautiful
+          wedding memories with creativity, emotion and professional
+          photography.
+        </p>
+
+        <br>
+
+        <p>
+          Contact:
+          <strong id="aboutPhone">—</strong>
+          &nbsp; | &nbsp;
+          <strong id="aboutEmail">—</strong>
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- BOOKING -->
+
+  <section id="booking" class="booking-section">
+
+    <div class="container">
+
+      <div class="section-title">
+        <h2>Book Your Wedding</h2>
+        <p style="color:#ddd;">
+          Select a package and your preferred wedding date.
+        </p>
+      </div>
+
+      <div class="booking-box">
+
+        <div id="bookingMessage" class="message"></div>
+
+        <form id="bookingForm">
+
+          <div class="form-group">
+            <label>Package</label>
+
+            <select id="bookingPackage" required>
+              <option value="">Select Package</option>
+            </select>
+          </div>
+
+
+          <div class="form-group">
+            <label>Wedding Date</label>
+
+            <input
+              type="date"
+              id="bookingDate"
+              required
+            >
+          </div>
+
+
+          <div class="form-group">
+            <label>Your Name</label>
+
+            <input
+              type="text"
+              id="customerName"
+              placeholder="Enter your name"
+              required
+            >
+          </div>
+
+
+          <div class="form-group">
+            <label>Phone Number</label>
+
+            <input
+              type="tel"
+              id="customerPhone"
+              placeholder="10 digit mobile number"
+              maxlength="10"
+              required
+            >
+          </div>
+
+
+          <button class="submit-btn" type="submit">
+            Continue Booking
+          </button>
+
+        </form>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <footer>
+
+    <p>
+      © <span id="footerYear"></span>
+      <span id="footerName">Saruf Photography</span>.
+      All Rights Reserved.
+    </p>
+
+  </footer>
+
+</div>
+
+
+<!-- =========================================================
+     PACKAGE DETAIL MODAL
+========================================================= -->
+
+<div id="packageModal" class="modal">
+
+  <div class="modal-box">
+
+    <button class="close-btn" onclick="closePackageModal()">×</button>
+
+    <img id="detailPhoto" class="detail-photo" src="" alt="Package">
+
+    <h2 id="detailName"></h2>
+
+    <div class="price" id="detailPrice"></div>
+
+    <p id="detailDuration" class="package-info"></p>
+
+    <p id="detailPhotographer" class="package-info"></p>
+
+    <p id="detailDescription" style="line-height:1.7;"></p>
+
+    <ul id="detailFeatures" class="features"></ul>
+
+    <p id="detailDrone" style="margin-bottom:20px;"></p>
+
+    <button
+      id="detailBookButton"
+      class="book-btn"
+    >
+      Book This Package
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- =========================================================
+     ADMIN PAGE
+========================================================= -->
+
+<div id="adminPage">
+
+  <!-- LOGIN -->
+
+  <div id="adminLoginScreen" class="login-screen">
+
+    <div class="login-box">
+
+      <h2>Admin Login</h2>
+
+      <div id="loginMessage" class="message"></div>
+
+      <input
+        type="email"
+        id="adminEmail"
+        placeholder="Admin Email"
+      >
+
+      <input
+        type="password"
+        id="adminPassword"
+        placeholder="Password"
+      >
+
+      <button onclick="adminLogin()">
+        Login
+      </button>
+
+      <br><br>
+
+      <a href="index.html" style="display:block;text-align:center;">
+        ← Back to Website
+      </a>
+
+    </div>
+
+  </div>
+
+
+  <!-- ADMIN DASHBOARD -->
+
+  <div id="adminDashboard" class="hidden">
+
+    <div class="admin-header">
+
+      <strong>Photography Admin Panel</strong>
+
+      <div>
+        <button onclick="loadAdminData()">Refresh</button>
+        <button onclick="adminLogout()">Logout</button>
+      </div>
+
+    </div>
+
+
+    <div class="admin-container">
+
+      <div id="adminMessage" class="message"></div>
+
+
+      <!-- PACKAGE MANAGEMENT -->
+
+      <div class="admin-card">
+
+        <h3>📦 Manage Packages</h3>
+
+        <input type="hidden" id="editPackageId">
+
+        <input
+          id="packageName"
+          placeholder="Package Name"
+        >
+
+        <input
+          id="packagePrice"
+          type="number"
+          placeholder="Price"
+        >
+
+        <input
+          id="packageDuration"
+          placeholder="Duration e.g. 2 Days"
+        >
+
+        <input
+          id="packagePhotographer"
+          placeholder="Photographer"
+        >
+
+        <textarea
+          id="packageDescription"
+          placeholder="Package description"
+          rows="3"
+        ></textarea>
+
+        <textarea
+          id="packageFeatures"
+          placeholder="Features separated by comma"
+          rows="3"
+        ></textarea>
+
+        <label>
+          <input
+            type="checkbox"
+            id="packageDrone"
+          >
+          Drone Photography
+        </label>
+
+        <br><br>
+
+        <label>
+          Package Photo
+        </label>
+
+        <input
+          type="file"
+          id="packagePhoto"
+          accept="image/*"
+        >
+
+        <button onclick="savePackage()" class="success">
+          Save Package
+        </button>
+
+        <button onclick="clearPackageForm()">
+          Clear
+        </button>
+
+        <div id="adminPackagesList" style="margin-top:20px;">
+          Loading...
+        </div>
+
+      </div>
+
+
+      <!-- AVAILABILITY -->
+
+      <div class="admin-card">
+
+        <h3>📅 Availability Management</h3>
+
+        <input
+          type="date"
+          id="availableDate"
+        >
+
+        <input
+          id="availabilityNotes"
+          placeholder="Notes (optional)"
+        >
+
+        <button onclick="addAvailability()" class="success">
+          Add Available Date
+        </button>
+
+        <div id="availabilityList" style="margin-top:20px;">
+          Loading...
+        </div>
+
+      </div>
+
+
+      <!-- EXPERIENCE PHOTOS -->
+
+      <div class="admin-card">
+
+        <h3>📸 Experience / Portfolio</h3>
+
+        <input
+          type="file"
+          id="experienceFiles"
+          accept="image/*"
+          multiple
+        >
+
+        <button onclick="uploadExperiencePhotos()" class="success">
+          Upload Photos
+        </button>
+
+        <div id="experienceAdminList" style="margin-top:20px;">
+          Loading...
+        </div>
+
+      </div>
+
+
+      <!-- SITE SETTINGS -->
+
+      <div class="admin-card">
+
+        <h3>⚙️ Website Settings</h3>
+
+        <input
+          id="settingName"
+          placeholder="Photographer Name"
+        >
+
+        <input
+          id="settingPhone"
+          placeholder="Phone"
+        >
+
+        <input
+          id="settingEmail"
+          placeholder="Email"
+        >
+
+        <input
+          id="settingTitle"
+          placeholder="Website Title"
+        >
+
+        <textarea
+          id="settingAbout"
+          placeholder="About text"
+          rows="5"
+        ></textarea>
+
+        <label>Logo</label>
+
+        <input
+          type="file"
+          id="settingLogo"
+          accept="image/*"
+        >
+
+        <button onclick="saveSettings()" class="success">
+          Save Website Settings
+        </button>
+
+      </div>
+
+
+      <!-- BOOKINGS -->
+
+      <div class="admin-card" style="grid-column:1/-1;">
+
+        <h3>📋 Bookings</h3>
+
+        <div class="admin-table-wrap">
+
+          <table>
+
+            <thead>
+
+              <tr>
+                <th>Date</th>
+                <th>Customer</th>
+                <th>Phone</th>
+                <th>Package</th>
+                <th>Amount</th>
+                <th>Payment</th>
+                <th>Booking</th>
+                <th>Action</th>
+              </tr>
+
+            </thead>
+
+            <tbody id="bookingsTable">
+              <tr>
+                <td colspan="8">Loading...</td>
+              </tr>
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   SUPABASE CONFIGURATION
+========================================================= */
+
+const SUPABASE_URL =
+  "https://lsbkfbfhlunmyizpvazl.supabase.co";
+
+const SUPABASE_KEY =
+  "sb_publishable_Ltgy4aOghEU3xvB2K3vTMw_CeoYwJf1";
+
+const BUCKET =
+  "Payment facility website of saruf";
+
+const { createClient } =
+  supabase;
+
+const db =
+  createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+
+/* =========================================================
+   GLOBAL VARIABLES
+========================================================= */
+
+let packages = [];
+
+let currentSettings = null;
+
+let editingPackage = null;
+
+
+/* =========================================================
+   DEFAULT IMAGE
+========================================================= */
+
+const DEFAULT_PACKAGE_IMAGE =
+  "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=80";
+
+
+/* =========================================================
+   PAGE MODE
+========================================================= */
+
+const urlParams =
+  new URLSearchParams(
+    window.location.search
+  );
+
+const isAdminPage =
+  urlParams.get("admin") === "1";
+
+
+/* =========================================================
+   INITIALIZE
+========================================================= */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  async () => {
+
+    document.getElementById("footerYear").textContent =
+      new Date().getFullYear();
+
+    if (isAdminPage) {
+
+      document.getElementById("publicPage").style.display =
+        "none";
+
+      document.getElementById("adminPage").style.display =
+        "block";
+
+      await checkAdminSession();
+
+    } else {
+
+      await loadPublicWebsite();
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   LOAD PUBLIC WEBSITE
+========================================================= */
+
+async function loadPublicWebsite() {
+
+  await loadSettings();
+
+  await loadPackages();
+
+  await loadExperiencePhotos();
+
+  await loadAvailableDates();
+
+}
+
+
+/* =========================================================
+   SETTINGS
+========================================================= */
+
+async function loadSettings() {
+
+  const result =
+    await db
+      .from("site_settings")
+      .select("*")
+      .order("created_at", {
+        ascending: true
+      })
+      .limit(1);
+
+  if (result.error) {
+
+    console.log(
+      "Settings error:",
+      result.error
+    );
+
+    return;
+
+  }
+
+  if (
+    result.data &&
+    result.data.length > 0
+  ) {
+
+    currentSettings =
+      result.data[0];
+
+    applySettings(
+      currentSettings
+    );
+
+  }
+
+}
+
+
+function applySettings(settings) {
+
+  const name =
+    settings.photographer_name ||
+    "Saruf Photography";
+
+  const logo =
+    settings.logo_url ||
+    "https://lsbkfbfhlunmyizpvazl.supabase.co/storage/v1/object/public/Payment%20facility%20website%20of%20saruf/file_000000004e448211b4d174df83b53cfb.png";
+
+  document.getElementById(
+    "navName"
+  ).textContent = name;
+
+  document.getElementById(
+    "heroTitle"
+  ).textContent = name;
+
+  document.getElementById(
+    "footerName"
+  ).textContent = name;
+
+  document.getElementById(
+    "navLogo"
+  ).src = logo;
+
+  document.getElementById(
+    "heroLogo"
+  ).src = logo;
+
+  document.getElementById(
+    "aboutPhone"
+  ).textContent =
+    settings.phone || "—";
+
+  document.getElementById(
+    "aboutEmail"
+  ).textContent =
+    settings.email || "—";
+
+  if (settings.about_text) {
+
+    document.getElementById(
+      "aboutText"
+    ).textContent =
+      settings.about_text;
+
+  }
+
+  if (settings.website_title) {
+
+    document.title =
+      settings.website_title;
+
+  }
+
+}
+
+
+/* =========================================================
+   LOAD PACKAGES
+========================================================= */
+
+async function loadPackages() {
+
+  const result =
+    await db
+      .from("packages")
+      .select("*")
+      .eq("is_active", true)
+      .order("sort_order", {
+        ascending: true
+      });
+
+  if (result.error) {
+
+    console.error(
+      result.error
+    );
+
+    document.getElementById(
+      "packagesGrid"
+    ).innerHTML =
+      '<div class="empty">Unable to load packages.</div>';
+
+    return;
+
+  }
+
+  packages =
+    result.data || [];
+
+  renderPackages();
+
+  populateBookingPackages();
+
+}
+
+
+function renderPackages() {
+
+  const grid =
+    document.getElementById(
+      "packagesGrid"
+    );
+
+  if (!packages.length) {
+
+    grid.innerHTML =
+      '<div class="empty">No packages available right now.</div>';
+
+    return;
+
+  }
+
+  grid.innerHTML =
+    packages
+      .map(
+        pkg => {
+
+          const image =
+            pkg.photo_url ||
+            DEFAULT_PACKAGE_IMAGE;
+
+          const features =
+            Array.isArray(pkg.features)
+              ? pkg.features
+              : [];
+
+          return `
+
+            <div
+              class="package-card"
+              onclick="openPackageModal('${pkg.id}')"
+            >
+
+              <img
+                class="package-photo"
+                src="${escapeHtml(image)}"
+                alt="${escapeHtml(pkg.name)}"
+              >
+
+              <div class="package-content">
+
+                <h3>
+                  ${escapeHtml(pkg.name)}
+                </h3>
+
+                <div class="price">
+                  ₹${formatPrice(pkg.price)}
+                </div>
+
+                <div class="package-info">
+                  ${escapeHtml(pkg.duration || "")}
+                </div>
+
+                <ul class="features">
+
+                  ${features
+                    .slice(0,4)
+                    .map(
+                      f =>
+                        `<li>${escapeHtml(f)}</li>`
+                    )
+                    .join("")}
+
+                </ul>
+
+                <button
+                  class="book-btn"
+                  onclick="event.stopPropagation(); selectPackage('${pkg.id}')"
+                >
+                  Book Now
+                </button>
+
+              </div>
+
+            </div>
+
+          `;
+
+        }
+      )
+      .join("");
+
+}
+
+
+/* =========================================================
+   PACKAGE MODAL
+========================================================= */
+
+function openPackageModal(id) {
+
+  const pkg =
+    packages.find(
+      p => p.id === id
+    );
+
+  if (!pkg) return;
+
+  document.getElementById(
+    "detailPhoto"
+  ).src =
+    pkg.photo_url ||
+    DEFAULT_PACKAGE_IMAGE;
+
+  document.getElementById(
+    "detailName"
+  ).textContent =
+    pkg.name;
+
+  document.getElementById(
+    "detailPrice"
+  ).textContent =
+    "₹" +
+    formatPrice(pkg.price);
+
+  document.getElementById(
+    "detailDuration"
+  ).textContent =
+    "Duration: " +
+    (pkg.duration || "—");
+
+  document.getElementById(
+    "detailPhotographer"
+  ).textContent =
+    "Photographer: " +
+    (pkg.photographer || "Professional Photographer");
+
+  document.getElementById(
+    "detailDescription"
+  ).textContent =
+    pkg.description ||
+    "Professional wedding photography package.";
+
+  document.getElementById(
+    "detailDrone"
+  ).textContent =
+    pkg.drone
+      ? "🚁 Drone Photography: Included"
+      : "🚁 Drone Photography: Not included";
+
+  const featureList =
+    document.getElementById(
+      "detailFeatures"
+    );
+
+  featureList.innerHTML =
+    (pkg.features || [])
+      .map(
+        f =>
+          `<li>${escapeHtml(f)}</li>`
+      )
+      .join("");
+
+  document.getElementById(
+    "detailBookButton"
+  ).onclick =
+    () => {
+
+      closePackageModal();
+
+      selectPackage(id);
+
+    };
+
+  document.getElementById(
+    "packageModal"
+  ).classList.add("show");
+
+}
+
+
+function closePackageModal() {
+
+  document.getElementById(
+    "packageModal"
+  ).classList.remove("show");
+
+}
+
+
+/* =========================================================
+   SELECT PACKAGE
+========================================================= */
+
+function selectPackage(id) {
+
+  document.getElementById(
+    "bookingPackage"
+  ).value = id;
+
+  document.getElementById(
+    "booking"
+  ).scrollIntoView({
+    behavior: "smooth"
+  });
+
+}
+
+
+/* =========================================================
+   BOOKING PACKAGES
+========================================================= */
+
+function populateBookingPackages() {
+
+  const select =
+    document.getElementById(
+      "bookingPackage"
+    );
+
+  select.innerHTML =
+    '<option value="">Select Package</option>';
+
+  packages.forEach(
+    pkg => {
+
+      const option =
+        document.createElement(
+          "option"
+        );
+
+      option.value =
+        pkg.id;
+
+      option.textContent =
+        `${pkg.name} — ₹${formatPrice(pkg.price)}`;
+
+      select.appendChild(
+        option
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   LOAD AVAILABLE DATES
+========================================================= */
+
+async function loadAvailableDates() {
+
+  const result =
+    await db
+      .from("availability")
+      .select("available_date")
+      .eq("is_available", true);
+
+  if (result.error) {
+
+    console.log(
+      "Availability:",
+      result.error
+    );
+
+    return;
+
+  }
+
+  const dates =
+    (result.data || [])
+      .map(
+        row =>
+          row.available_date
+      );
+
+  window.availableDates =
+    dates;
+
+}
+
+
+/* =========================================================
+   DATE VALIDATION
+========================================================= */
+
+document.getElementById(
+  "bookingDate"
+).addEventListener(
+  "change",
+  function() {
+
+    const selected =
+      this.value;
+
+    if (
+      window.availableDates &&
+      window.availableDates.length > 0 &&
+      !window.availableDates.includes(
+        selected
+      )
+    ) {
+
+      showBookingMessage(
+        "This date is not currently available. Please select an available date.",
+        "error"
+      );
+
+    } else {
+
+      hideBookingMessage();
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   BOOKING SUBMIT
+========================================================= */
+
+document.getElementById(
+  "bookingForm"
+).addEventListener(
+  "submit",
+  async function(event) {
+
+    event.preventDefault();
+
+    const packageId =
+      document.getElementById(
+        "bookingPackage"
+      ).value;
+
+    const date =
+      document.getElementById(
+        "bookingDate"
+      ).value;
+
+    const name =
+      document.getElementById(
+        "customerName"
+      ).value.trim();
+
+    const phone =
+      document.getElementById(
+        "customerPhone"
+      ).value.trim();
+
+    if (!packageId) {
+
+      showBookingMessage(
+        "Please select a package.",
+        "error"
+      );
+
+      return;
+
+    }
+
+    if (!date) {
+
+      showBookingMessage(
+        "Please select your wedding date.",
+        "error"
+      );
+
+      return;
+
+    }
+
+    if (!/^[0-9]{10}$/.test(phone)) {
+
+      showBookingMessage(
+        "Please enter a valid 10-digit phone number.",
+        "error"
+      );
+
+      return;
+
+    }
+
+    const selectedPackage =
+      packages.find(
+        p => p.id === packageId
+      );
+
+    if (!selectedPackage) {
+
+      showBookingMessage(
+        "Selected package is not available.",
+        "error"
+      );
+
+      return;
+
+    }
+
+    const button =
+      this.querySelector(
+        "button[type='submit']"
+      );
+
+    button.disabled =
+      true;
+
+    button.textContent =
+      "Creating Booking...";
+
+
+    const payload = {
+
+      package_id:
+        packageId,
+
+      customer_name:
+        name,
+
+      phone:
+        phone,
+
+      booking_date:
+        date,
+
+      payment_status:
+        "pending",
+
+      booking_status:
+        "pending",
+
+      payment_amount:
+        Number(
+          selectedPackage.price
+        ),
+
+      payment_currency:
+        "INR"
+
+    };
+
+
+    const result =
+      await db
+        .from("bookings")
+        .insert(payload);
+
+
+    button.disabled =
+      false;
+
+    button.textContent =
+      "Continue Booking";
+
+
+    if (result.error) {
+
+      console.error(
+        result.error
+      );
+
+      showBookingMessage(
+        "Booking could not be created. Please try again.",
+        "error"
+      );
+
+      return;
+
+    }
+
+
+    showBookingMessage(
+      "Booking request submitted successfully! Payment gateway will be connected next.",
+      "success"
+    );
+
+    this.reset();
+
+  }
+);
+
+
+/* =========================================================
+   BOOKING MESSAGE
+========================================================= */
+
+function showBookingMessage(
+  text,
+  type
+) {
+
+  const box =
+    document.getElementById(
+      "bookingMessage"
+    );
+
+  box.textContent =
+    text;
+
+  box.className =
+    "message show " +
+    type;
+
+}
+
+
+function hideBookingMessage() {
+
+  const box =
+    document.getElementById(
+      "bookingMessage"
+    );
+
+  box.className =
+    "message";
+
+}
+
+
+/* =========================================================
+   ADMIN SESSION
+========================================================= */
+
+async function checkAdminSession() {
+
+  const sessionResult =
+    await db.auth.getSession();
+
+  const session =
+    sessionResult.data.session;
+
+  if (!session) {
+
+    showAdminLogin();
+
+    return;
+
+  }
+
+  const isAdmin =
+    await verifyAdminUser(
+      session.user.id
+    );
+
+  if (!isAdmin) {
+
+    await db.auth.signOut();
+
+    showAdminLogin();
+
+    showLoginMessage(
+      "You do not have admin access.",
+      "error"
+    );
+
+    return;
+
+  }
+
+  showAdminDashboard();
+
+  await loadAdminData();
+
+}
+
+
+async function verifyAdminUser(
+  userId
+) {
+
+  const result =
+    await db
+      .from("admin_users")
+      .select("user_id")
+      .eq(
+        "user_id",
+        userId
+      )
+      .maybeSingle();
+
+  return !!(
+    result.data &&
+    result.data.user_id
+  );
+
+}
+
+
+/* =========================================================
+   ADMIN LOGIN
+========================================================= */
+
+async function adminLogin() {
+
+  const email =
+    document.getElementById(
+      "adminEmail"
+    ).value.trim();
+
+  const password =
+    document.getElementById(
+      "adminPassword"
+    ).value;
+
+  if (!email || !password) {
+
+    showLoginMessage(
+      "Enter email and password.",
+      "error"
+    );
+
+    return;
+
+  }
+
+  const result =
+    await db.auth.signInWithPassword({
+      email,
+      password
+    });
+
+  if (result.error) {
+
+    showLoginMessage(
+      result.error.message,
+      "error"
+    );
+
+    return;
+
+  }
+
+  const isAdmin =
+    await verifyAdminUser(
+      result.data.user.id
+    );
+
+  if (!isAdmin) {
+
+    await db.auth.signOut();
+
+    showLoginMessage(
+      "Login successful, but this account is not an admin.",
+      "error"
+    );
+
+    return;
+
+  }
+
+  showAdminDashboard();
+
+  await loadAdminData();
+
+}
+
+
+async function adminLogout() {
+
+  await db.auth.signOut();
+
+  window.location.href =
+    "index.html?admin=1";
+
+}
+
+
+/* =========================================================
+   ADMIN UI
+========================================================= */
+
+function showAdminLogin() {
+
+  document.getElementById(
+    "adminLoginScreen"
+  ).classList.remove("hidden");
+
+  document.getElementById(
+    "adminDashboard"
+  ).classList.add("hidden");
+
+}
+
+
+function showAdminDashboard() {
+
+  document.getElementById(
+    "adminLoginScreen"
+  ).classList.add("hidden");
+
+  document.getElementById(
+    "adminDashboard"
+  ).classList.remove("hidden");
+
+}
+
+
+function showLoginMessage(
+  text,
+  type
+) {
+
+  const box =
+    document.getElementById(
+      "loginMessage"
+    );
+
+  box.textContent =
+    text;
+
+  box.className =
+    "message show " +
+    type;
+
+}
+
+
+/* =========================================================
+   LOAD ADMIN DATA
+========================================================= */
+
+async function loadAdminData() {
+
+  await loadAdminPackages();
+
+  await loadAdminAvailability();
+
+  await loadAdminExperience();
+
+  await loadAdminSettings();
+
+  await loadAdminBookings();
+
+}
+
+
+/* =========================================================
+   ADMIN PACKAGES
+========================================================= */
+
+async function loadAdminPackages() {
+
+  const result =
+    await db
+      .from("packages")
+      .select("*")
+      .order("sort_order", {
+        ascending: true
+      });
+
+  if (result.error) {
+
+    console.error(
+      result.error
+    );
+
+    return;
+
+  }
+
+  const list =
+    document.getElementById(
+      "adminPackagesList"
+    );
+
+  if (!result.data.length) {
+
+    list.innerHTML =
+      '<div class="empty">No packages found.</div>';
+
+    return;
+
+  }
+
+  list.innerHTML =
+    result.data
+      .map(
+        pkg => `
+
+          <div class="admin-package-item">
+
+            ${
+              pkg.photo_url
+                ? `<img src="${escapeHtml(pkg.photo_url)}">`
+                : ""
+            }
+
+            <strong>
+              ${escapeHtml(pkg.name)}
+            </strong>
+
+            <p>
+              ₹${formatPrice(pkg.price)}
+              —
+              ${escapeHtml(pkg.duration || "")}
+            </p>
+
+            <p>
+              ${
+                pkg.is_active
+                  ? "🟢 Active"
+                  : "🔴 Hidden"
+              }
+            </p>
+
+            <button
+              onclick="editPackage('${pkg.id}')"
+            >
+              Edit
+            </button>
+
+            <button
+              onclick="togglePackage('${pkg.id}', ${pkg.is_active})"
+            >
+              ${
+                pkg.is_active
+                  ? "Hide"
+                  : "Show"
+              }
+            </button>
+
+            <button
+              class="danger"
+              onclick="deletePackage('${pkg.id}')"
+            >
+              Delete
+            </button>
+
+          </div>
+
+        `
+      )
+      .join("");
+
+}
+
+
+/* =========================================================
+   EDIT PACKAGE
+========================================================= */
+
+async function editPackage(id) {
+
+  const result =
+    await db
+      .from("packages")
+      .select("*")
+      .eq("id", id)
+      .single();
+
+  if (result.error) {
+
+    showAdminMessage(
+      "Could not load package.",
+      "error"
+    );
+
+    return;
+
+  }
+
+  const pkg =
+    result.data;
+
+  document.getElementById(
+    "editPackageId"
+  ).value =
+    pkg.id;
+
+  document.getElementById(
+    "packageName"
+  ).value =
+    pkg.name || "";
+
+  document.getElementById(
+    "packagePrice"
+  ).value =
+    pkg.price || "";
+
+  document.getElementById(
+    "packageDuration"
+  ).value =
+    pkg.duration || "";
+
+  document.getElementById(
+    "packagePhotographer"
+  ).value =
+    pkg.photographer || "";
+
+  document.getElementById(
+    "packageDescription"
+  ).value =
+    pkg.description || "";
+
+  document.getElementById(
+    "packageFeatures"
+  ).value =
+    (pkg.features || [])
+      .join(", ");
+
+  document.getElementById(
+    "packageDrone"
+  ).checked =
+    !!pkg.drone;
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+
+}
+
+
+/* =========================================================
+   SAVE PACKAGE
+========================================================= */
+
+async function savePackage() {
+
+  const id =
+    document.getElementById(
+      "editPackageId"
+    ).value;
+
+  const name =
+    document.getElementById(
+      "packageName"
+    ).value.trim();
+
+  const price =
+    Number(
+      document.getElementById(
+        "packagePrice"
+      ).value
+    );
+
+  const duration =
+    document.getElementById(
+      "packageDuration"
+    ).value.trim();
+
+  const photographer =
+    document.getElementById(
+      "packagePhotographer"
+    ).value.trim();
+
+  const description =
+    document.getElementById(
+      "packageDescription"
+    ).value.trim();
+
+  const featuresText =
+    document.getElementById(
+      "packageFeatures"
+    ).value;
+
+  const drone =
+    document.getElementById(
+      "packageDrone"
+    ).checked;
+
+  const file =
+    document.getElementById(
+      "packagePhoto"
+    ).files[0];
+
+
+  if (!name) {
+
+    showAdminMessage(
+      "Package name is required.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  let photoUrl =
+    null;
+
+
+  /* Existing package */
+
+  if (id) {
+
+    const oldResult =
+      await db
+        .from("packages")
+        .select("photo_url")
+        .eq("id", id)
+        .single();
+
+    if (!oldResult.error) {
+
+      photoUrl =
+        oldResult.data.photo_url;
+
+    }
+
+  }
+
+
+  /* Upload package photo */
+
+  if (file) {
+
+    const extension =
+      file.name
+        .split(".")
+        .pop();
+
+    const path =
+      "packages/" +
+      crypto.randomUUID() +
+      "." +
+      extension;
+
+
+    const upload =
+      await db.storage
+        .from(BUCKET)
+        .upload(
+          path,
+          file,
+          {
+            upsert: false
+          }
+        );
+
+
+    if (upload.error) {
+
+      showAdminMessage(
+        "Package photo upload failed: " +
+        upload.error.message,
+        "error"
+      );
+
+      return;
+
+    }
+
+
+    const publicUrl =
+      db.storage
+        .from(BUCKET)
+        .getPublicUrl(path);
+
+    photoUrl =
+      publicUrl.data.publicUrl;
+
+  }
+
+
+  const features =
+    featuresText
+      .split(",")
+      .map(
+        x => x.trim()
+      )
+      .filter(Boolean);
+
+
+  if (id) {
+
+    const update =
+      await db
+        .from("packages")
+        .update({
+
+          name,
+          price,
+          duration,
+          photographer,
+          description,
+          features,
+          drone,
+          photo_url:
+            photoUrl,
+
+          updated_at:
+            new Date().toISOString()
+
+        })
+        .eq("id", id);
+
+
+    if (update.error) {
+
+      showAdminMessage(
+        update.error.message,
+        "error"
+      );
+
+      return;
+
+    }
+
+    showAdminMessage(
+      "Package updated successfully.",
+      "success"
+    );
+
+  } else {
+
+    const countResult =
+      await db
+        .from("packages")
+        .select("sort_order")
+        .order("sort_order", {
+          ascending: false
+        })
+        .limit(1);
+
+    let sortOrder = 1;
+
+    if (
+      countResult.data &&
+      countResult.data.length
+    ) {
+
+      sortOrder =
+        Number(
+          countResult.data[0].sort_order
+        ) + 1;
+
+    }
+
+
+    const insert =
+      await db
+        .from("packages")
+        .insert({
+
+          name,
+          price,
+          duration,
+          photographer,
+          description,
+          features,
+          drone,
+          photo_url:
+            photoUrl,
+
+          sort_order:
+            sortOrder,
+
+          is_active:
+            true
+
+        });
+
+
+    if (insert.error) {
+
+      showAdminMessage(
+        insert.error.message,
+        "error"
+      );
+
+      return;
+
+    }
+
+    showAdminMessage(
+      "New package added successfully.",
+      "success"
+    );
+
+  }
+
+
+  clearPackageForm();
+
+  await loadAdminPackages();
+
+  await loadPackages();
+
+}
+
+
+/* =========================================================
+   CLEAR PACKAGE FORM
+========================================================= */
+
+function clearPackageForm() {
+
+  document.getElementById(
+    "editPackageId"
+  ).value = "";
+
+  document.getElementById(
+    "packageName"
+  ).value = "";
+
+  document.getElementById(
+    "packagePrice"
+  ).value = "";
+
+  document.getElementById(
+    "packageDuration"
+  ).value = "";
+
+  document.getElementById(
+    "packagePhotographer"
+  ).value = "";
+
+  document.getElementById(
+    "packageDescription"
+  ).value = "";
+
+  document.getElementById(
+    "packageFeatures"
+  ).value = "";
+
+  document.getElementById(
+    "packageDrone"
+  ).checked = false;
+
+  document.getElementById(
+    "packagePhoto"
+  ).value = "";
+
+}
+
+
+/* =========================================================
+   TOGGLE PACKAGE
+========================================================= */
+
+async function togglePackage(
+  id,
+  active
+) {
+
+  const result =
+    await db
+      .from("packages")
+      .update({
+        is_active:
+          !active,
+        updated_at:
+          new Date().toISOString()
+      })
+      .eq(
+        "id",
+        id
+      );
+
+  if (result.error) {
+
+    showAdminMessage(
+      result.error.message,
+      "error"
+    );
+
+    return;
+
+  }
+
+  await loadAdminPackages();
+
+  await loadPackages();
+
+}
+
+
+/* =========================================================
+   DELETE PACKAGE
+========================================================= */
+
+async function deletePackage(id) {
+
+  if (
+    !confirm(
+      "Delete this package?"
+    )
+  ) {
+
+    return;
+
+  }
+
+  const result =
+    await db
+      .from("packages")
+      .delete()
+      .eq(
+        "id",
+        id
+      );
+
+  if (result.error) {
+
+    showAdminMessage(
+      result.error.message,
+      "error"
+    );
+
+    return;
+
+  }
+
+  showAdminMessage(
+    "Package deleted.",
+    "success"
+  );
+
+  await loadAdminPackages();
+
+  await loadPackages();
+
+}
+
+
+/* =========================================================
+   AVAILABILITY ADMIN
+========================================================= */
+
+async function loadAdminAvailability() {
+
+  const result =
+    await db
+      .from("availability")
+      .select("*")
+      .order(
+        "available_date",
+        {
+          ascending: true
+        }
+      );
+
+  const list =
+    document.getElementById(
+      "availabilityList"
+    );
+
+  if (result.error) {
+
+    list.innerHTML =
+      "Unable to load availability.";
+
+    return;
+
+  }
+
+  if (!result.data.length) {
+
+    list.innerHTML =
+      '<div class="empty">No dates added yet.</div>';
+
+    return;
+
+  }
+
+  list.innerHTML =
+    result.data
+      .map(
+        item => `
+
+          <div class="admin-date-item">
+
+            <strong>
+              ${escapeHtml(item.available_date)}
+            </strong>
+
+            <p>
+              ${
+                item.notes
+                  ? escapeHtml(item.notes)
+                  : ""
+              }
+            </p>
+
+            <span class="status">
+              ${
+                item.is_available
+                  ? "Available"
+                  : "Unavailable"
+              }
+            </span>
+
+            <br>
+
+            <button
+              onclick="toggleAvailability('${item.id}', ${item.is_available})"
+            >
+              ${
+                item.is_available
+                  ? "Mark Unavailable"
+                  : "Make Available"
+              }
+            </button>
+
+            <button
+              class="danger"
+              onclick="deleteAvailability('${item.id}')"
+            >
+              Delete
+            </button>
+
+          </div>
+
+        `
+      )
+      .join("");
+
+}
+
+
+async function addAvailability() {
+
+  const date =
+    document.getElementById(
+      "availableDate"
+    ).value;
+
+  const notes =
+    document.getElementById(
+      "availabilityNotes"
+    ).value.trim();
+
+  if (!date) {
+
+    showAdminMessage(
+      "Select a date first.",
+      "error"
+    );
+
+    return;
+
+  }
+
+  const result =
+    await db
+      .from("availability")
+      .upsert(
+        {
+          available_date:
+            date,
+
+          is_available:
+            true,
+
+          notes:
+            notes
+        },
+        {
+          onConflict:
+            "available_date"
+        }
+      );
+
+  if (result.error) {
+
+    showAdminMessage(
+      result.error.message,
+      "error"
+    );
+
+    return;
+
+  }
+
+  document.getElementById(
+    "availableDate"
+  ).value = "";
+
+  document.getElementById(
+    "availabilityNotes"
+  ).value = "";
+
+  showAdminMessage(
+    "Available date added.",
+    "success"
+  );
+
+  await loadAdminAvailability();
+
+  await loadAvailableDates();
+
+}
+
+
+async function toggleAvailability(
+  id,
+  active
+) {
+
+  const result =
+    await db
+      .from("availability")
+      .update({
+        is_available:
+          !active
+      })
+      .eq(
+        "id",
+        id
+      );
+
+  if (result.error) {
+
+    showAdminMessage(
+      result.error.message,
+      "error"
+    );
+
+    return;
+
+  }
+
+  await loadAdminAvailability();
+
+  await loadAvailableDates();
+
+}
+
+
+async function deleteAvailability(id) {
+
+  if (
+    !confirm(
+      "Delete this availability date?"
+    )
+  ) {
+
+    return;
+
+  }
+
+  const result =
+    await db
+      .from("availability")
+      .delete()
+      .eq(
+        "id",
+        id
+      );
+
+  if (result.error) {
+
+    showAdminMessage(
+      result.error.message,
+      "error"
+    );
+
+    return;
+
+  }
+
+  await loadAdminAvailability();
+
+  await loadAvailableDates();
+
+}
+
+
+/* =========================================================
+   EXPERIENCE PHOTOS
+========================================================= */
+
+async function loadExperiencePhotos() {
+
+  const result =
+    await db
+      .from("experience_photos")
+      .select("*")
+      .eq("is_active", true)
+      .order(
+        "sort_order",
+        {
+          ascending: true
+        }
+      );
+
+  const gallery =
+    document.getElementById(
+      "experienceGallery"
+    );
+
+  if (result.error) {
+
+    gallery.innerHTML =
+      '<div class="empty">Unable to load photos.</div>';
+
+    return;
+
+  }
+
+  if (!result.data.length) {
+
+    gallery.innerHTML =
+      '<div class="empty">Portfolio photos will appear here.</div>';
+
+    return;
+
+  }
+
+  gallery.innerHTML =
+    result.data
+      .map(
+        photo => `
+
+          <div class="gallery-item">
+
+            <img
+              src="${escapeHtml(photo.photo_url)}"
+              alt="${escapeHtml(photo.title || "Wedding Photography")}"
+            >
+
+          </div>
+
+        `
+      )
+      .join("");
+
+}
+
+
+async function loadAdminExperience() {
+
+  const result =
+    await db
+      .from("experience_photos")
+      .select("*")
+      .order(
+        "created_at",
+        {
+          ascending: false
+        }
+      );
+
+  const list =
+    document.getElementById(
+      "experienceAdminList"
+    );
+
+  if (result.error) {
+
+    list.innerHTML =
+      "Unable to load photos.";
+
+    return;
+
+  }
+
+  if (!result.data.length) {
+
+    list.innerHTML =
+      '<div class="empty">No portfolio photos uploaded.</div>';
+
+    return;
+
+  }
+
+  list.innerHTML =
+    result.data
+      .map(
+        photo => `
+
+          <div class="admin-photo-item">
+
+            <img
+              src="${escapeHtml(photo.photo_url)}"
+            >
+
+            <br>
+
+            <span>
+              ${
+                photo.is_active
+                  ? "🟢 Visible"
+                  : "🔴 Hidden"
+              }
+            </span>
+
+            <br>
+
+            <button
+              onclick="toggleExperience('${photo.id}', ${photo.is_active})"
+            >
+              ${
+                photo.is_active
+                  ? "Hide"
+                  : "Show"
+              }
+            </button>
+
+            <button
+              class="danger"
+              onclick="deleteExperience('${photo.id}')"
+            >
+              Delete
+            </button>
+
+          </div>
+
+        `
+      )
+      .join("");
+
+}
+
+
+async function uploadExperiencePhotos() {
+
+  const files =
+    Array.from(
+      document.getElementById(
+        "experienceFiles"
+      ).files
+    );
+
+  if (!files.length) {
+
+    showAdminMessage(
+      "Select at least one photo.",
+      "error"
+    );
+
+    return;
+
+  }
+
+  for (
+    const file of files
+  ) {
+
+    const extension =
+      file.name
+        .split(".")
+        .pop();
+
+    const path =
+      "experience/" +
+      crypto.randomUUID() +
+      "." +
+      extension;
+
+    const upload =
+      await db.storage
+        .from(BUCKET)
+        .upload(
+          path,
+          file
+        );
+
+    if (upload.error) {
+
+      console.error(
+        upload.error
+      );
+
+      continue;
+
+    }
+
+    const publicUrl =
+      db.storage
+        .from(BUCKET)
+        .getPublicUrl(path)
+        .data.publicUrl;
+
+
+    await db
+      .from("experience_photos")
+      .insert({
+
+        photo_url:
+          publicUrl,
+
+        title:
+          "Wedding Photography",
+
+        is_active:
+          true
+
+      });
+
+  }
+
+  document.getElementById(
+    "experienceFiles"
+  ).value = "";
+
+  showAdminMessage(
+    "Experience photos uploaded.",
+    "success"
+  );
+
+  await loadAdminExperience();
+
+  await loadExperiencePhotos();
+
+}
+
+
+async function toggleExperience(
+  id,
+  active
+) {
+
+  const result =
+    await db
+      .from("experience_photos")
+      .update({
+        is_active:
+          !active
+      })
+      .eq(
+        "id",
+        id
+      );
+
+  if (result.error) {
+
+    showAdminMessage(
+      result.error.message,
+      "error"
+    );
+
+    return;
+
+  }
+
+  await loadAdminExperience();
+
+  await loadExperiencePhotos();
+
+}
+
+
+async function deleteExperience(id) {
+
+  if (
+    !confirm(
+      "Delete this portfolio photo?"
+    )
+  ) {
+
+    return;
+
+  }
+
+  const result =
+    await db
+      .from("experience_photos")
+      .delete()
+      .eq(
+        "id",
+        id
+      );
+
+  if (result.error) {
+
+    showAdminMessage(
+      result.error.message,
+      "error"
+    );
+
+    return;
+
+  }
+
+  await loadAdminExperience();
+
+  await loadExperiencePhotos();
+
+}
+
+
+/* =========================================================
+   ADMIN SETTINGS
+========================================================= */
+
+async function loadAdminSettings() {
+
+  const result =
+    await db
+      .from("site_settings")
+      .select("*")
+      .order(
+        "created_at",
+        {
+          ascending: true
+        }
+      )
+      .limit(1);
+
+  if (
+    result.error ||
+    !result.data ||
+    !result.data.length
+  ) {
+
+    return;
+
+  }
+
+  const settings =
+    result.data[0];
+
+  document.getElementById(
+    "settingName"
+  ).value =
+    settings.photographer_name || "";
+
+  document.getElementById(
+    "settingPhone"
+  ).value =
+    settings.phone || "";
+
+  document.getElementById(
+    "settingEmail"
+  ).value =
+    settings.email || "";
+
+  document.getElementById(
+    "settingTitle"
+  ).value =
+    settings.website_title || "";
+
+  document.getElementById(
+    "settingAbout"
+  ).value =
+    settings.about_text || "";
+
+}
+
+
+async function saveSettings() {
+
+  const name =
+    document.getElementById(
+      "settingName"
+    ).value.trim();
+
+  const phone =
+    document.getElementById(
+      "settingPhone"
+    ).value.trim();
+
+  const email =
+    document.getElementById(
+      "settingEmail"
+    ).value.trim();
+
+  const title =
+    document.getElementById(
+      "settingTitle"
+    ).value.trim();
+
+  const about =
+    document.getElementById(
+      "settingAbout"
+    ).value.trim();
+
+  const logoFile =
+    document.getElementById(
+      "settingLogo"
+    ).files[0];
+
+
+  let logoUrl =
+    currentSettings &&
+    currentSettings.logo_url
+      ? currentSettings.logo_url
+      : null;
+
+
+  if (logoFile) {
+
+    const extension =
+      logoFile.name
+        .split(".")
+        .pop();
+
+    const path =
+      "logo/" +
+      crypto.randomUUID() +
+      "." +
+      extension;
+
+    const upload =
+      await db.storage
+        .from(BUCKET)
+        .upload(
+          path,
+          logoFile
+        );
+
+    if (upload.error) {
+
+      showAdminMessage(
+        upload.error.message,
+        "error"
+      );
+
+      return;
+
+    }
+
+    logoUrl =
+      db.storage
+        .from(BUCKET)
+        .getPublicUrl(path)
+        .data.publicUrl;
+
+  }
+
+
+  const check =
+    await db
+      .from("site_settings")
+      .select("id")
+      .order(
+        "created_at",
+        {
+          ascending: true
+        }
+      )
+      .limit(1);
+
+  let result;
+
+
+  if (
+    check.data &&
+    check.data.length
+  ) {
+
+    result =
+      await db
+        .from("site_settings")
+        .update({
+
+          photographer_name:
+            name,
+
+          phone:
+            phone,
+
+          email:
+            email,
+
+          logo_url:
+            logoUrl,
+
+          website_title:
+            title,
+
+          about_text:
+            about,
+
+          updated_at:
+            new Date().toISOString()
+
+        })
+        .eq(
+          "id",
+          check.data[0].id
+        );
+
+  } else {
+
+    result =
+      await db
+        .from("site_settings")
+        .insert({
+
+          photographer_name:
+            name,
+
+          phone:
+            phone,
+
+          email:
+            email,
+
+          logo_url:
+            logoUrl,
+
+          website_title:
+            title,
+
+          about_text:
+            about
+
+        });
+
+  }
+
+
+  if (result.error) {
+
+    showAdminMessage(
+      result.error.message,
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  showAdminMessage(
+    "Website settings saved.",
+    "success"
+  );
+
+  await loadAdminSettings();
+
+}
+
+
+/* =========================================================
+   ADMIN BOOKINGS
+========================================================= */
+
+async function loadAdminBookings() {
+
+  const result =
+    await db
+      .from("bookings")
+      .select(`
+        *,
+        packages (
+          name,
+          price
+        )
+      `)
+      .order(
+        "created_at",
+        {
+          ascending: false
+        }
+      );
+
+  const tbody =
+    document.getElementById(
+      "bookingsTable"
+    );
+
+  if (result.error) {
+
+    tbody.innerHTML =
+      `
+        <tr>
+          <td colspan="8">
+            Unable to load bookings.
+          </td>
+        </tr>
+      `;
+
+    return;
+
+  }
+
+  if (!result.data.length) {
+
+    tbody.innerHTML =
+      `
+        <tr>
+          <td colspan="8">
+            No bookings yet.
+          </td>
+        </tr>
+      `;
+
+    return;
+
+  }
+
+
+  tbody.innerHTML =
+    result.data
+      .map(
+        booking => {
+
+          const packageName =
+            booking.packages
+              ? booking.packages.name
+              : "Package deleted";
+
+          const amount =
+            booking.payment_amount ||
+            (
+              booking.packages
+                ? booking.packages.price
+                : 0
+            );
+
+          return `
+
+            <tr>
+
+              <td>
+                ${escapeHtml(booking.booking_date || "")}
+              </td>
+
+              <td>
+                ${escapeHtml(booking.customer_name || "")}
+              </td>
+
+              <td>
+                ${escapeHtml(booking.phone || "")}
+              </td>
+
+              <td>
+                ${escapeHtml(packageName)}
+              </td>
+
+              <td>
+                ₹${formatPrice(amount)}
+              </td>
+
+              <td>
+                ${escapeHtml(booking.payment_status || "pending")}
+              </td>
+
+              <td>
+                ${escapeHtml(booking.booking_status || "pending")}
+              </td>
+
+              <td>
+
+                <button
+                  onclick="updateBookingStatus('${booking.id}','confirmed')"
+                  class="success"
+                >
+                  Confirm
+                </button>
+
+                <button
+                  onclick="updateBookingStatus('${booking.id}','cancelled')"
+                  class="danger"
+                >
+                  Cancel
+                </button>
+
+              </td>
+
+            </tr>
+
+          `;
+
+        }
+      )
+      .join("");
+
+}
+
+
+/* =========================================================
+   UPDATE BOOKING STATUS
+========================================================= */
+
+async function updateBookingStatus(
+  id,
+  status
+) {
+
+  const result =
+    await db
+      .from("bookings")
+      .update({
+        booking_status:
+          status
+      })
+      .eq(
+        "id",
+        id
+      );
+
+  if (result.error) {
+
+    showAdminMessage(
+      result.error.message,
+      "error"
+    );
+
+    return;
+
+  }
+
+  showAdminMessage(
+    "Booking status updated.",
+    "success"
+  );
+
+  await loadAdminBookings();
+
+}
+
+
+/* =========================================================
+   ADMIN MESSAGE
+========================================================= */
+
+function showAdminMessage(
+  text,
+  type
+) {
+
+  const box =
+    document.getElementById(
+      "adminMessage"
+    );
+
+  box.textContent =
+    text;
+
+  box.className =
+    "message show " +
+    type;
+
+  setTimeout(
+    () => {
+      box.className =
+        "message";
+    },
+    4000
+  );
+
+}
+
+
+/* =========================================================
+   UTILITY FUNCTIONS
+========================================================= */
+
+function formatPrice(
+  value
+) {
+
+  return Number(
+    value || 0
+  ).toLocaleString(
+    "en-IN"
+  );
+
+}
+
+
+function escapeHtml(
+  value
+) {
+
+  if (
+    value === null ||
+    value === undefined
+  ) {
+
+    return "";
+
+  }
+
+  return String(value)
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+    .replace(
+      /</g,
+      "&lt;"
+    )
+    .replace(
+      />/g,
+      "&gt;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
+}
+
+
+/* =========================================================
+   CLOSE MODAL WHEN CLICKING OUTSIDE
+========================================================= */
+
+document.getElementById(
+  "packageModal"
+).addEventListener(
+  "click",
+  function(event) {
+
+    if (
+      event.target === this
+    ) {
+
+      closePackageModal();
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   PREVENT OLD DATES
+========================================================= */
+
+const today =
+  new Date()
+    .toISOString()
+    .split("T")[0];
+
+document.getElementById(
+  "bookingDate"
+).min =
+  today;
+
+
+/* =========================================================
+   AUTH STATE
+========================================================= */
+
+db.auth.onAuthStateChange(
+  async (event, session) => {
+
+    if (
+      isAdminPage &&
+      event === "SIGNED_IN" &&
+      session
+    ) {
+
+      const isAdmin =
+        await verifyAdminUser(
+          session.user.id
+        );
+
+      if (isAdmin) {
+
+        showAdminDashboard();
+
+        await loadAdminData();
+
+      }
+
+    }
+
+  }
+);
+
+</script>
+
+</body>
+</html>
