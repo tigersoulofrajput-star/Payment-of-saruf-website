@@ -618,31 +618,61 @@
     }
 
     @media(max-width:650px) {
-      nav {
-        display: none;
-      }
+  nav {
+    display: none;
+  }
 
-      .packages-grid {
-        grid-template-columns: 1fr;
-      }
+  .packages-grid {
+    grid-template-columns: 1fr;
+  }
 
-      .gallery {
-        grid-template-columns: 1fr 1fr;
-      }
+  .gallery {
+    grid-template-columns: 1fr 1fr;
+  }
 
-      .gallery-item {
-        height: 210px;
-      }
+  .gallery-item {
+    height: 210px;
+  }
 
-      section {
-        padding: 55px 15px;
-      }
+  section {
+    padding: 55px 15px;
+  }
 
-      .booking-box,
-      .about-box {
-        padding: 25px;
-      }
-    }
+  .booking-box,
+  .about-box {
+    padding: 25px;
+  }
+
+  /* Mobile Booking Alignment Fix */
+  .booking-box {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  .form-group {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  .form-group input[type="date"] {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+}
 
     .hidden {
       display: none !important;
